@@ -1,0 +1,17 @@
+apt update
+
+apt install certbot python3-certbot-nginx -y
+
+# Cria um arquivo de confguração e valida ela
+nginx -t
+
+# se tudo der sucesso, deve gerar o certificado
+certbot --nginx
+
+# e deve estar 100%
+
+# comando só para renovar
+docker exec iot-nginx certbot renew -q
+
+# comando para renovar automatico
+echo "0 0 23 1,4,7,10 * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && docker exec iot-nginx certbot renew -q" | sudo tee -a /etc/crontab > /dev/null
